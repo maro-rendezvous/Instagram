@@ -14,6 +14,9 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var addCommentButton: UIButton!
+    @IBOutlet weak var commentTextField: UITextField!
+    @IBOutlet weak var postButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,7 +38,13 @@ class PostTableViewCell: UITableViewCell {
         
         // キャプションの表示
         self.captionLabel.text = "\(postData.name!) : \(postData.caption!)"
-        
+        if !postData.comments.isEmpty {
+//            self.captionLabel.text! +=
+            postData.comments.forEach {
+                self.captionLabel.text = self.captionLabel.text! + "\n" + $0
+            }
+
+        }
         // 日時の表示
         self.dateLabel.text = ""
         if let date = postData.date {
@@ -43,6 +52,7 @@ class PostTableViewCell: UITableViewCell {
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
             let dateString = formatter.string(from: date)
             self.dateLabel.text = dateString
+            self.dateLabel.font = UIFont.systemFont(ofSize: 12.0)
         }
         
         // いいね数の表示
@@ -57,5 +67,20 @@ class PostTableViewCell: UITableViewCell {
             let buttonImage = UIImage(named: "like_none")
             self.likeButton.setImage(buttonImage, for: .normal)
         }
+        
+        addCommentButton.setTitle("コメントを追加", for: .normal)
+        addCommentButton.titleLabel?.font = UIFont.systemFont(ofSize: 12.0)
+        addCommentButton.sizeToFit()
+        commentTextField.placeholder = "コメントを追加"
+        commentTextField.isHidden = true
+        postButton.setTitle("投稿する", for: .normal)
+        postButton.isHidden = true
     }
+    
+    @IBAction func addComment(_ sender: Any) {
+        commentTextField.isHidden = false
+        postButton.isHidden = false
+        commentTextField.text = ""
+    }
+    
 }
